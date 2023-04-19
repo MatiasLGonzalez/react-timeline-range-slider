@@ -1,33 +1,11 @@
-const path = require('path')
-
-module.exports = {
-  mode: 'production',
-  entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js',
-    library: 'react-timeline-range-slider',
-    libraryTarget: 'commonjs2'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        include: path.resolve(__dirname, 'src'),
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-react', "@babel/preset-env"]
-          }
-        }
-      }, {
-        test: /\.s[ac]ss$/i,
-        use : [ 'style-loader', 'css-loader', 'sass-loader']
-      },
+module: {
+    loaders: [
+        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        { test: /\.tsx?$/, loader: "awesome-typescript-loader" }
+    ],
+    preLoaders: [
+        // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
+        { test: /\.js$/, loader: "source-map-loader" }
     ]
-  },
-  externals: {
-    'react': 'commonjs react'
-  }
-};
+}
+

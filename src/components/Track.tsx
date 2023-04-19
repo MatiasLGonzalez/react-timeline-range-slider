@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import React from 'react'
 
 const getTrackConfig = ({ error, source, target, disabled }) => {
   const basicStyle = {

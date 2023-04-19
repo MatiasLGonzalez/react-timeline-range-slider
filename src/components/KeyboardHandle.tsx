@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import React from 'react'
 
 const KeyboardHandle = ({ domain: [min, max], handle: { id, value, percent = 0 }, disabled, getHandleProps }) => (
   <button
