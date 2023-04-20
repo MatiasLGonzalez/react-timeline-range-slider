@@ -3,12 +3,12 @@
   "version": "1.4.1",
   "description": "Time Slider component for React",
   "author": "Elizaveta Shkodkina <lizashkodkina@gmail.com>",
-  "main": "src/index.js",
+  "main": "src/index.tsx",
   "license": "MIT",
-  "homepage": "https://github.com/lizashkod/react-time-range-slider",
+  "homepage": "https://github.com/MatiasLGonzalez/react-time-range-slider",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lizashkod/react-time-range-slider"
+    "url": "https://github.com/MatiasLGonzalez/react-time-range-slider"
   },
   "keywords": [
     "react-component",
