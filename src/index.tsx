@@ -42,7 +42,7 @@ interface TimeRangeProps {
   formatTick?: (ms: number) => string;
   error?: boolean;
   mode?: number;
-  onChangeCallback?: (formattedNewTime: Date[]) => void;
+  onChangeCallback?: (formattedNewTime: [Date,Date]) => void;
   onUpdateCallback?: (data: UpdateCallbackData) => void;
   showNow: boolean;
 }
