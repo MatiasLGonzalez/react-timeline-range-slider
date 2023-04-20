@@ -1,16 +1,16 @@
-import { CSSProperties, ReactFragment } from "react";
+import React from 'react';
 
 interface HandleProps {
-  error?: boolean;
+  error: boolean;
   domain: number[];
   handle: {
     id: string;
     value: number;
-    percent?: number;
+    percent: number;
   };
   getHandleProps: (id: string) => any;
   disabled?: boolean;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 }
 
 const Handle: React.FC<HandleProps> = ({
@@ -19,7 +19,7 @@ const Handle: React.FC<HandleProps> = ({
   handle: { id, value, percent = 0 },
   disabled,
   getHandleProps,
-}: HandleProps): ReactFragment => {
+}) => {
   const leftPosition = `${percent}%`;
 
   return (
@@ -34,9 +34,7 @@ const Handle: React.FC<HandleProps> = ({
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
-        className={`react_time_range__handle_container${
-          disabled ? "__disabled" : ""
-        }`}
+        className={`react_time_range__handle_container${disabled ? "__disabled" : ""}`}
         style={{ left: leftPosition }}
       >
         <div
