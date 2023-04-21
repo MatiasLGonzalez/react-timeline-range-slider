@@ -9,7 +9,7 @@ interface HandleProps {
     percent: number;
   };
   getHandleProps: (id: string) => any;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const handleStyles = {
@@ -63,7 +63,7 @@ const Handle: React.FC<HandleProps> = ({
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
-        style={{ ...handleStyles.container(disabled), left: leftPosition }}
+        style={{ ...handleStyles.container(disabled ?? false), left: leftPosition }}
       >
         <div
           style={handleStyles.marker(error)}

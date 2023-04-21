@@ -253,7 +253,6 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     handle={handle}
                     domain={domain}
                     getHandleProps={getHandleProps}
-                    disabled={disabledIntervals?.length ? true : false}
                   />
                 ))}
               </>
