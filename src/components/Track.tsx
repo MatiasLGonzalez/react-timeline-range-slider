@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import React from "react";
+import styled from "@emotion/styled";
 
 type TrackProps = {
   source: {
@@ -38,7 +38,7 @@ const StyledTrack = styled.div<StyledTrackProps>`
 
   ${({ disabled, error }) =>
     disabled
-      ? ''
+      ? ""
       : error
       ? `
     background-color: rgba(214,0,11,0.5);
@@ -58,14 +58,18 @@ const Track: React.FC<TrackProps> = ({
   target,
   getTrackProps,
   disabled,
-}) => (
-  <StyledTrack
-    error={error}
-    disabled={disabled}
-    sourcePercent={source.percent}
-    targetPercent={target.percent}
-    {...getTrackProps()}
-  />
-);
+}) => {
+  console.log("Track props:");
+  console.log({ error, source, target, getTrackProps, disabled });
+  return (
+    <StyledTrack
+      error={error}
+      disabled={disabled}
+      sourcePercent={source.percent}
+      targetPercent={target.percent}
+      {...getTrackProps()}
+    />
+  );
+};
 
 export default Track;

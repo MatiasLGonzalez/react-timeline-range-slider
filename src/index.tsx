@@ -140,6 +140,12 @@ class TimeRange extends React.Component<TimeRangeProps> {
     showNow: true,
   };
   get disabledIntervals() {
+    console.log(
+      getFormattedBlockedIntervals(
+        this.props.disabledIntervals,
+        this.props.timelineInterval ?? [startOfToday(), endOfToday()]
+      )
+    );
     return getFormattedBlockedIntervals(
       this.props.disabledIntervals,
       this.props.timelineInterval ?? [startOfToday(), endOfToday()]
@@ -147,7 +153,9 @@ class TimeRange extends React.Component<TimeRangeProps> {
   }
 
   get now() {
-    return getNowConfig(this.props.timelineInterval ?? [startOfToday(), endOfToday()]);
+    return getNowConfig(
+      this.props.timelineInterval ?? [startOfToday(), endOfToday()]
+    );
   }
 
   onChange = (newTime: ReadonlyArray<number>) => {
@@ -225,9 +233,13 @@ class TimeRange extends React.Component<TimeRangeProps> {
       mode = defaultProps.mode,
     } = this.props;
 
-    const domain = (timelineInterval ?? [startOfToday(), endOfToday()]).map((t) => Number(t));
+    const domain = (timelineInterval ?? [startOfToday(), endOfToday()]).map(
+      (t) => Number(t)
+    );
 
     const disabledIntervals = this.disabledIntervals;
+
+    console.log(this.props.disabledIntervals);
 
     return (
       <TimeRangeContainer className={containerClassName}>
@@ -236,7 +248,9 @@ class TimeRange extends React.Component<TimeRangeProps> {
           domain={domain.map((t) => +t)}
           onUpdate={this.onUpdate}
           onChange={this.onChange}
-          values={(selectedInterval ?? [new Date(), addHours(new Date(), 1)]).map((t) => +t)}
+          values={(
+            selectedInterval ?? [new Date(), addHours(new Date(), 1)]
+          ).map((t) => +t)}
           rootStyle={{ position: "relative", width: "100%" }}
         >
           <Rail>
