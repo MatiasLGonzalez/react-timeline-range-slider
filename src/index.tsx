@@ -286,7 +286,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
                       source={source}
                       target={target}
                       getTrackProps={getTrackProps}
-                      disabled
+                      disabled={true}
                     />
                   ))}
                 </>
