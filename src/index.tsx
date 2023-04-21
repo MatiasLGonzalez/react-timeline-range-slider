@@ -13,9 +13,8 @@ import {
   set,
   addMinutes,
 } from "date-fns";
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
-
+import styled from "@emotion/styled";
+import { css } from "@emotion/react";
 
 import SliderRail from "./components/SliderRail";
 import Track from "./components/Track";
@@ -53,9 +52,9 @@ interface TimeRangeProps {
   containerClassName?: string;
   sliderRailClassName?: string;
   /** Number of milliseconds between steps (the default value is 30 minutes) */
-  step: number;
+  step?: number;
   /** Function that determines the format in which the date will be displayed */
-  formatTick: (ms: number) => string;
+  formatTick?: (ms: number) => string;
   /** Is the selected interval is not valid */
   error: boolean;
   /** The interaction mode. Value of 1 will allow handles to cross each other.
@@ -126,6 +125,18 @@ const getNowConfig = ([startTime, endTime]: Date[]) => {
 };
 
 class TimeRange extends React.Component<TimeRangeProps> {
+  static defaultProps: Partial<TimeRangeProps> = {
+    timelineInterval: [startOfToday(), endOfToday()],
+    selectedInterval: [new Date(), addHours(new Date(), 1)],
+    disabledIntervals: [],
+    containerClassName: "",
+    step: 1000 * 60 * 30, // 30 minutes in milliseconds
+    ticksNumber: 48, // 30 minutes * 48 = 24 hours
+    error: false,
+    mode: 3,
+    formatTick: (ms: number) => format(new Date(ms), "HH:mm"),
+    showNow: true,
+  };
   get disabledIntervals() {
     return getFormattedBlockedIntervals(
       this.props.disabledIntervals,
@@ -240,7 +251,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     handle={handle}
                     domain={domain}
                     getHandleProps={getHandleProps}
-					disabled={disabledIntervals?.length? true : false}
+                    disabled={disabledIntervals?.length ? true : false}
                   />
                 ))}
               </>
@@ -304,7 +315,10 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     key={tick.id}
                     tick={tick}
                     count={ticks.length}
-                    format={formatTick}
+                    format={
+                      formatTick ??
+                      ((ms: number) => format(new Date(ms), "HH:mm"))
+                    }
                   />
                 ))}
               </>
@@ -315,5 +329,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
     );
   }
 }
+
+TimeRange.defaultProps = defaultProps;
 
 export default TimeRange;
