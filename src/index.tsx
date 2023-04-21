@@ -41,11 +41,11 @@ const TimeRangeContainer = styled.div`
 
 interface TimeRangeProps {
   /** Number of steps on the timeline (the default value is 30 minutes) */
-  ticksNumber: number;
+  ticksNumber?: number;
   /** Selected interval inside the timeline */
-  selectedInterval: [Date, Date];
+  selectedInterval?: [Date, Date];
   /** Interval to display */
-  timelineInterval: [Date, Date];
+  timelineInterval?: [Date, Date];
   /** Array of disabled intervals inside the timeline */
   disabledIntervals?: Interval[];
   /** ClassName of the wrapping container */
@@ -56,7 +56,7 @@ interface TimeRangeProps {
   /** Function that determines the format in which the date will be displayed */
   formatTick?: (ms: number) => string;
   /** Is the selected interval is not valid */
-  error: boolean;
+  error?: boolean;
   /** The interaction mode. Value of 1 will allow handles to cross each other.
    * Value of 2 will keep the sliders from crossing and separated by a step.
    * Value of 3 will make the handles pushable and keep them a step apart.
@@ -64,8 +64,8 @@ interface TimeRangeProps {
    * values and the incoming update. Your function should return what the state
    * should be set as. */
   mode?: number;
-  onChangeCallback?: (formattedNewTime: [Date, Date]) => void;
-  onUpdateCallback?: (data: UpdateCallbackData) => void;
+  onChangeCallback: (formattedNewTime: [Date, Date]) => void;
+  onUpdateCallback: (data: UpdateCallbackData) => void;
   showNow: boolean;
 }
 
@@ -80,6 +80,8 @@ const defaultProps: TimeRangeProps = {
   mode: 3,
   formatTick: (ms: number) => format(new Date(ms), "HH:mm"),
   showNow: true,
+  onChangeCallback: () => {},
+  onUpdateCallback: () => {},
 };
 
 const getTimelineConfig =
@@ -140,12 +142,12 @@ class TimeRange extends React.Component<TimeRangeProps> {
   get disabledIntervals() {
     return getFormattedBlockedIntervals(
       this.props.disabledIntervals,
-      this.props.timelineInterval
+      this.props.timelineInterval ?? [startOfToday(), endOfToday()]
     );
   }
 
   get now() {
-    return getNowConfig(this.props.timelineInterval);
+    return getNowConfig(this.props.timelineInterval ?? [startOfToday(), endOfToday()]);
   }
 
   onChange = (newTime: ReadonlyArray<number>) => {
@@ -205,7 +207,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
   getDateTicks = () => {
     const { timelineInterval, ticksNumber } = this.props;
     return scaleTime()
-      .domain(timelineInterval)
+      .domain(timelineInterval ?? [startOfToday(), endOfToday()])
       .ticks(ticksNumber)
       .map((t) => +t);
   };
@@ -223,7 +225,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
       mode = defaultProps.mode,
     } = this.props;
 
-    const domain = timelineInterval.map((t) => Number(t));
+    const domain = (timelineInterval ?? [startOfToday(), endOfToday()]).map((t) => Number(t));
 
     const disabledIntervals = this.disabledIntervals;
 
@@ -231,10 +233,10 @@ class TimeRange extends React.Component<TimeRangeProps> {
       <TimeRangeContainer className={containerClassName}>
         <Slider
           step={step}
-          domain={domain}
+          domain={domain.map((t) => +t)}
           onUpdate={this.onUpdate}
           onChange={this.onChange}
-          values={selectedInterval.map((t) => +t)}
+          values={(selectedInterval ?? [new Date(), addHours(new Date(), 1)]).map((t) => +t)}
           rootStyle={{ position: "relative", width: "100%" }}
         >
           <Rail>
@@ -246,7 +248,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
               <>
                 {handles.map((handle) => (
                   <Handle
-                    error={error}
+                    error={error ?? false}
                     key={handle.id}
                     handle={handle}
                     domain={domain}
@@ -263,7 +265,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
               <>
                 {tracks?.map(({ id, source, target }) => (
                   <Track
-                    error={error}
+                    error={error ?? false}
                     key={id}
                     source={source}
                     target={target}
@@ -280,7 +282,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
                 <>
                   {disabledIntervals.map(({ id, source, target }) => (
                     <Track
-                      error={error}
+                      error={error ?? false}
                       key={id}
                       source={source}
                       target={target}
@@ -297,7 +299,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
             <Tracks left={false} right={false}>
               {({ getTrackProps }) => (
                 <Track
-                  error={error}
+                  error={error ?? false}
                   key={this.now?.id}
                   source={this.now?.source}
                   target={this.now?.target}
