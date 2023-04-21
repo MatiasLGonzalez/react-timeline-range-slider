@@ -9,9 +9,39 @@ interface HandleProps {
     percent: number;
   };
   getHandleProps: (id: string) => any;
-  disabled?: boolean;
-  style?: React.CSSProperties;
+  disabled: boolean;
 }
+
+const handleStyles = {
+  wrapper: {
+    position: 'absolute' as 'absolute',
+    zIndex: 2,
+    width: 20,
+    height: 20,
+    cursor: 'pointer',
+    borderRadius: '50%',
+    backgroundColor: 'white',
+  },
+  container: (disabled: boolean) => ({
+    position: 'absolute' as 'absolute',
+    zIndex: 3,
+    width: 20,
+    height: 20,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    borderRadius: '50%',
+    backgroundColor: 'white',
+    border: '1px solid #ccc',
+  }),
+  marker: (error: boolean) => ({
+    position: 'absolute' as 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    backgroundColor: error ? 'red' : 'blue',
+  }),
+};
 
 const Handle: React.FC<HandleProps> = ({
   error,
@@ -25,8 +55,7 @@ const Handle: React.FC<HandleProps> = ({
   return (
     <>
       <div
-        className="react_time_range__handle_wrapper"
-        style={{ left: leftPosition }}
+        style={{ ...handleStyles.wrapper, left: leftPosition }}
         {...getHandleProps(id)}
       />
       <div
@@ -34,11 +63,10 @@ const Handle: React.FC<HandleProps> = ({
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
-        className={`react_time_range__handle_container${disabled ? "__disabled" : ""}`}
-        style={{ left: leftPosition }}
+        style={{ ...handleStyles.container(disabled), left: leftPosition }}
       >
         <div
-          className={`react_time_range__handle_marker${error ? "__error" : ""}`}
+          style={handleStyles.marker(error)}
         />
       </div>
     </>

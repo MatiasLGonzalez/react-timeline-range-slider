@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import styled from '@emotion/styled';
 
 type TrackProps = {
   source: {
@@ -16,48 +17,40 @@ type TrackProps = {
   error: boolean;
 };
 
-type GetTrackConfigProps = {
-	error: boolean;
-	source: {
-	  id: string;
-	  value: number;
-	  percent: number;
-	};
-	target: {
-	  id: string;
-	  value: number;
-	  percent: number;
-	};
-	disabled: boolean;
-  };
-
-const getTrackConfig = ({
-  error,
-  source,
-  target,
-  disabled,
-}: GetTrackConfigProps): React.CSSProperties => {
-  const basicStyle: React.CSSProperties = {
-    left: `${source.percent}%`,
-    width: `calc(${target.percent - source.percent}% - 1px)`,
-  };
-
-  if (disabled) return basicStyle;
-
-  const coloredTrackStyle: React.CSSProperties = error
-    ? {
-        backgroundColor: "rgba(214,0,11,0.5)",
-        borderLeft: "1px solid rgba(214,0,11,0.5)",
-        borderRight: "1px solid rgba(214,0,11,0.5)",
-      }
-    : {
-        backgroundColor: "rgba(98, 203, 102, 0.5)",
-        borderLeft: "1px solid #62CB66",
-        borderRight: "1px solid #62CB66",
-      };
-
-  return { ...basicStyle, ...coloredTrackStyle };
+type StyledTrackProps = {
+  error: boolean;
+  disabled: boolean;
+  sourcePercent: number;
+  targetPercent: number;
 };
+
+const StyledTrack = styled.div<StyledTrackProps>`
+  position: absolute;
+  transform: translate(0%, -50%);
+  height: 50px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease;
+  z-index: ${({ disabled }) => (disabled ? 1 : 3)};
+
+  left: ${({ sourcePercent }) => `${sourcePercent}%`};
+  width: ${({ sourcePercent, targetPercent }) =>
+    `calc(${targetPercent - sourcePercent}% - 1px)`};
+
+  ${({ disabled, error }) =>
+    disabled
+      ? ''
+      : error
+      ? `
+    background-color: rgba(214,0,11,0.5);
+    border-left: 1px solid rgba(214,0,11,0.5);
+    border-right: 1px solid rgba(214,0,11,0.5);
+  `
+      : `
+    background-color: rgba(98, 203, 102, 0.5);
+    border-left: 1px solid #62CB66;
+    border-right: 1px solid #62CB66;
+  `}
+`;
 
 const Track: React.FC<TrackProps> = ({
   error,
@@ -66,9 +59,11 @@ const Track: React.FC<TrackProps> = ({
   getTrackProps,
   disabled = false,
 }) => (
-  <div
-    className={`react_time_range__track${disabled ? "__disabled" : ""}`}
-    style={getTrackConfig({ error, source, target, disabled })}
+  <StyledTrack
+    error={error}
+    disabled={disabled}
+    sourcePercent={source.percent}
+    targetPercent={target.percent}
     {...getTrackProps()}
   />
 );

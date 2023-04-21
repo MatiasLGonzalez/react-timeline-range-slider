@@ -13,13 +13,14 @@ import {
   set,
   addMinutes,
 } from "date-fns";
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+
 
 import SliderRail from "./components/SliderRail";
 import Track from "./components/Track";
 import Tick from "./components/Tick";
 import Handle from "./components/Handle";
-
-import "./styles/index.css";
 
 type Interval = {
   id: string;
@@ -31,6 +32,13 @@ type UpdateCallbackData = {
   error: boolean;
   time: Date[];
 };
+
+const TimeRangeContainer = styled.div`
+  padding: 30px 10% 0;
+  height: 70px;
+  width: 90%;
+  box-sizing: border-box;
+`;
 
 interface TimeRangeProps {
   /** Number of steps on the timeline (the default value is 30 minutes) */
@@ -209,11 +217,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
     const disabledIntervals = this.disabledIntervals;
 
     return (
-      <div
-        className={
-          containerClassName || "react_time_range__time_range_container"
-        }
-      >
+      <TimeRangeContainer className={containerClassName}>
         <Slider
           step={step}
           domain={domain}
@@ -236,6 +240,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     handle={handle}
                     domain={domain}
                     getHandleProps={getHandleProps}
+					disabled={disabledIntervals?.length? true : false}
                   />
                 ))}
               </>
@@ -306,7 +311,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
             )}
           </Ticks>
         </Slider>
-      </div>
+      </TimeRangeContainer>
     );
   }
 }
