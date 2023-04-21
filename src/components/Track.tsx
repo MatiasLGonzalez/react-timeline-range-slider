@@ -57,7 +57,7 @@ const Track: React.FC<TrackProps> = ({
   source,
   target,
   getTrackProps,
-  disabled = false,
+  disabled,
 }) => (
   <StyledTrack
     error={error}
