@@ -1,19 +1,19 @@
 {
 	"compilerOptions": {
-	  "target": "es5",
-	  "lib": ["dom", "dom.iterable", "esnext"],
+	  "target": "es2022",
+	  "lib": ["dom", "dom.iterable", "es2022"],
 	  "allowJs": true,
-	  "skipLibCheck": true,
 	  "esModuleInterop": true,
-	  "allowSyntheticDefaultImports": true,
 	  "strict": true,
 	  "forceConsistentCasingInFileNames": true,
-	  "module": "esnext",
-	  "moduleResolution": "node",
+	  "module": "es2022",
+	  "moduleResolution": "nodenext",
 	  "resolveJsonModule": true,
 	  "isolatedModules": true,
-	  "noEmit": true,
+	  "noEmit": false,
 	  "jsx": "react-jsx",
+	  "declaration": true,
+	  "outDir": "dist",
 	  "types": ["@emotion/react/types/css-prop"]
 	},
 	"include": ["src"]
