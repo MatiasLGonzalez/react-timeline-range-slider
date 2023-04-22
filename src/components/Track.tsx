@@ -38,7 +38,11 @@ const StyledTrack = styled.div<StyledTrackProps>`
 
   ${({ disabled, error }) =>
     disabled
-      ? ""
+      ? `
+    border-left: 1px solid #C8CACC;
+    border-right: 1px solid #C8CACC;
+    background: #666;
+	  `
       : error
       ? `
     background-color: rgba(214,0,11,0.5);
