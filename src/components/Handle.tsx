@@ -1,20 +1,20 @@
-import React from 'react';
+import React from 'react'
 
 interface HandleProps {
-  error: boolean;
-  domain: number[];
+  error: boolean
+  domain: number[]
   handle: {
-    id: string;
-    value: number;
-    percent: number;
-  };
-  getHandleProps: (id: string) => any;
-  disabled?: boolean;
+    id: string
+    value: number
+    percent: number
+  }
+  getHandleProps: (id: string) => any
+  disabled?: boolean
 }
 
 const handleStyles = {
   wrapper: {
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     zIndex: 2,
     width: 20,
     height: 20,
@@ -23,7 +23,7 @@ const handleStyles = {
     backgroundColor: 'white',
   },
   container: (disabled: boolean) => ({
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     zIndex: 3,
     width: 20,
     height: 20,
@@ -33,7 +33,7 @@ const handleStyles = {
     border: '1px solid #ccc',
   }),
   marker: (error: boolean) => ({
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     top: 0,
     left: 0,
     width: '100%',
@@ -41,7 +41,7 @@ const handleStyles = {
     borderRadius: '50%',
     backgroundColor: error ? 'red' : 'blue',
   }),
-};
+}
 
 const Handle: React.FC<HandleProps> = ({
   error,
@@ -50,27 +50,22 @@ const Handle: React.FC<HandleProps> = ({
   disabled,
   getHandleProps,
 }) => {
-  const leftPosition = `${percent}%`;
+  const leftPosition = `${percent}%`
 
   return (
     <>
+      <div style={{ ...handleStyles.wrapper, left: leftPosition }} {...getHandleProps(id)} />
       <div
-        style={{ ...handleStyles.wrapper, left: leftPosition }}
-        {...getHandleProps(id)}
-      />
-      <div
-        role="slider"
+        role='slider'
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuenow={value}
         style={{ ...handleStyles.container(disabled ?? false), left: leftPosition }}
       >
-        <div
-          style={handleStyles.marker(error)}
-        />
+        <div style={handleStyles.marker(error)} />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Handle;
+export default Handle

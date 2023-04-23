@@ -1,8 +1,9 @@
-import React from 'react';
-import { css } from '@emotion/react';
+import React from 'react'
+import { SerializedStyles, css } from '@emotion/react'
+import styled from '@emotion/styled'
 
 interface SliderRailProps {
-  getRailProps: () => any;
+  getRailProps: () => any
 }
 
 const railOuterStyles = css`
@@ -11,7 +12,7 @@ const railOuterStyles = css`
   height: 50px;
   transform: translate(0%, -50%);
   cursor: pointer;
-`;
+`
 
 const railInnerStyles = css`
   position: absolute;
@@ -19,15 +20,19 @@ const railInnerStyles = css`
   height: 50px;
   transform: translate(0%, -50%);
   pointer-events: none;
-  background-color: #F5F7FA;
-  border-bottom: 1px solid #C8CACC;
-`;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #c8cacc;
+`
+
+const StyledDiv = styled.div`
+  ${(props: { css: SerializedStyles }) => props.css}
+`
 
 export const SliderRail: React.FC<SliderRailProps> = ({ getRailProps }) => (
   <>
-    <div css={railOuterStyles} {...getRailProps()} />
-    <div css={railInnerStyles} />
+    <StyledDiv css={railOuterStyles} {...getRailProps()} />
+    <StyledDiv css={railInnerStyles} />
   </>
-);
+)
 
-export default SliderRail;
+export default SliderRail

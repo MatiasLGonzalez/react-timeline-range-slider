@@ -1,15 +1,15 @@
-import React from 'react';
-import { getMinutes } from 'date-fns';
-import styled from '@emotion/styled';
+import React from 'react'
+import { getMinutes } from 'date-fns'
+import styled from '@emotion/styled'
 
 interface TickProps {
   tick: {
-    id: string;
-    value: number;
-    percent: number;
-  };
-  count: number;
-  format: (value: number) => string;
+    id: string
+    value: number
+    percent: number
+  }
+  count: number
+  format: (value: number) => string
 }
 
 const TickMarker = styled.div<{ isFullHour: boolean }>`
@@ -19,7 +19,7 @@ const TickMarker = styled.div<{ isFullHour: boolean }>`
   height: ${({ isFullHour }) => (isFullHour ? '10px' : '5px')};
   background-color: #c8cacc;
   z-index: 2;
-`;
+`
 
 const TickLabel = styled.div`
   position: absolute;
@@ -29,25 +29,23 @@ const TickLabel = styled.div`
   z-index: 2;
   color: #77828c;
   font-family: sans-serif;
-`;
+`
 
 const Tick: React.FC<TickProps> = ({ tick, count, format }) => {
-  const isFullHour = !getMinutes(tick.value);
+  const isFullHour = !getMinutes(tick.value)
 
   const tickLabelStyle = {
     marginLeft: `${-(100 / count) / 2}%`,
     width: `${100 / count}%`,
     left: `${tick.percent}%`,
-  };
+  }
 
   return (
     <>
       <TickMarker isFullHour={isFullHour} style={{ left: `${tick.percent}%` }} />
-      {isFullHour && (
-        <TickLabel style={tickLabelStyle}>{format(tick.value)}</TickLabel>
-      )}
+      {isFullHour && <TickLabel style={tickLabelStyle}>{format(tick.value)}</TickLabel>}
     </>
-  );
-};
+  )
+}
 
-export default Tick;
+export default Tick
