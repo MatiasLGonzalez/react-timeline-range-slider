@@ -22,7 +22,7 @@
   "homepage": "https://www.npmjs.com/package/@matiaslgonzalez/react-timeline-range-slider",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MatiasLGonzalez/react-timerange-slider"
+    "url": "https://github.com/MatiasLGonzalez/react-timeline-range-slider"
   },
   "keywords": [
     "react-component",
