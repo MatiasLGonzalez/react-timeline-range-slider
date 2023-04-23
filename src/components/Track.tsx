@@ -33,7 +33,7 @@ const StyledTrack = styled.div<StyledTrackProps>`
   z-index: ${({ disabled }) => (disabled ? 1 : 3)};
 
   left: ${({ sourcePercent }) => `${sourcePercent}%`};
-  width: ${({ sourcePercent, targetPercent }) => `calc(${targetPercent - sourcePercent}% - 1px)`};
+  width: ${({ sourcePercent, targetPercent }) => `calc(${targetPercent - sourcePercent}%)`};
 
   ${({ disabled, error }) =>
     disabled
