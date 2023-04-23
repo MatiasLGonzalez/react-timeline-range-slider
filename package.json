@@ -1,12 +1,12 @@
 {
   "name": "@matiaslgonzalez/react-timeline-range-slider",
-  "version": "1.5.1-2",
+  "version": "1.5.1-6",
   "description": "Time Slider component for React",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "build": "yarn build:esm && yarn build:cjs",
+    "build": "yarn build:esm",
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "lint": "eslint \"{**/*,*}.{js,ts,jsx,tsx}\"",
@@ -19,10 +19,10 @@
   "contributors": [
     "Matías González <hello@matiaslgonzalez.com>"
   ],
-  "homepage": "https://npmjs.com/package/@matiaslgonzalez/react-time-range-slider",
+  "homepage": "https://www.npmjs.com/package/@matiaslgonzalez/react-timeline-range-slider",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MatiasLGonzalez/react-time-range-slider"
+    "url": "https://github.com/MatiasLGonzalez/react-timerange-slider"
   },
   "keywords": [
     "react-component",
@@ -69,8 +69,8 @@
     "react": ">=16"
   },
   "files": [
-	"dist",
-	"LICENSE",
-	"README.md"
+    "dist",
+    "LICENSE",
+    "README.md"
   ]
 }

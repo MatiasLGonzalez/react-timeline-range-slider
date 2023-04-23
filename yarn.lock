@@ -967,6 +967,8 @@ __metadata:
     ts-jest: ^29.1.0
     tslib: ^2.5.0
     typescript: ^5.0.4
+  peerDependencies:
+    react: ">=16"
   languageName: unknown
   linkType: soft
 

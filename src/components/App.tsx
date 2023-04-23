@@ -134,12 +134,6 @@ class TimeRange extends React.Component<TimeRangeProps> {
     showNow: true,
   }
   get disabledIntervals() {
-    console.log(
-      getFormattedBlockedIntervals(
-        this.props.disabledIntervals,
-        this.props.timelineInterval ?? [startOfToday(), endOfToday()],
-      ),
-    )
     return getFormattedBlockedIntervals(
       this.props.disabledIntervals,
       this.props.timelineInterval ?? [startOfToday(), endOfToday()],
@@ -216,8 +210,6 @@ class TimeRange extends React.Component<TimeRangeProps> {
     const domain = (timelineInterval ?? [startOfToday(), endOfToday()]).map((t) => Number(t))
 
     const disabledIntervals = this.disabledIntervals
-
-    console.log(this.props.disabledIntervals)
 
     return (
       <TimeRangeContainer className={containerClassName}>

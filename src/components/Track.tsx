@@ -56,8 +56,6 @@ const StyledTrack = styled.div<StyledTrackProps>`
 `
 
 const Track: React.FC<TrackProps> = ({ error, source, target, getTrackProps, disabled }) => {
-  console.log('Track props:')
-  console.log({ error, source, target, getTrackProps, disabled })
   return (
     <StyledTrack
       error={error}
