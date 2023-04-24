@@ -11,30 +11,13 @@ import {
   isAfter,
   addMinutes,
 } from 'date-fns'
-import styled from '@emotion/styled'
 
 import SliderRail from './SliderRail'
 import Track from './Track'
 import Tick from './Tick'
 import Handle from './Handle'
-
-type Interval = {
-  id: string
-  start: Date
-  end: Date
-}
-
-type UpdateCallbackData = {
-  error: boolean
-  time: Date[]
-}
-
-const TimeRangeContainer = styled.div`
-  padding: 30px 10% 0;
-  height: 70px;
-  width: 90%;
-  box-sizing: border-box;
-`
+import { TimeRangeContainer } from './StyledComponents'
+import { Interval, UpdateCallbackData } from '../types'
 
 interface TimeRangeProps {
   /** Number of steps on the timeline (the default value is 30 minutes) */

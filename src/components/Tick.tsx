@@ -1,6 +1,7 @@
 import React from 'react'
 import { getMinutes } from 'date-fns'
-import styled from '@emotion/styled'
+
+import { TickLabel, TickMarker } from './StyledComponents'
 
 interface TickProps {
   tick: {
@@ -11,25 +12,6 @@ interface TickProps {
   count: number
   format: (value: number) => string
 }
-
-const TickMarker = styled.div<{ isFullHour: boolean }>`
-  position: absolute;
-  margin-top: ${({ isFullHour }) => (isFullHour ? '15px' : '20px')};
-  width: 1px;
-  height: ${({ isFullHour }) => (isFullHour ? '10px' : '5px')};
-  background-color: #c8cacc;
-  z-index: 2;
-`
-
-const TickLabel = styled.div`
-  position: absolute;
-  margin-top: 28px;
-  font-size: 10px;
-  text-align: center;
-  z-index: 2;
-  color: #77828c;
-  font-family: sans-serif;
-`
 
 const Tick: React.FC<TickProps> = ({ tick, count, format }) => {
   const isFullHour = !getMinutes(tick.value)
