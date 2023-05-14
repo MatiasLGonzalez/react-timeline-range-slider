@@ -16,9 +16,10 @@ type TrackProps = {
   getTrackProps: () => any
   disabled?: boolean
   error: boolean
+  color?: string
 }
 
-const Track: React.FC<TrackProps> = ({ error, source, target, getTrackProps, disabled }) => {
+const Track: React.FC<TrackProps> = ({ error, source, target, getTrackProps, disabled, color }) => {
   return (
     <StyledTrack
       error={error}
@@ -26,6 +27,7 @@ const Track: React.FC<TrackProps> = ({ error, source, target, getTrackProps, dis
       sourcePercent={source.percent}
       targetPercent={target.percent}
       {...getTrackProps()}
+      color={color}
     />
   )
 }

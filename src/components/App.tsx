@@ -17,7 +17,7 @@ import Track from './Track'
 import Tick from './Tick'
 import Handle from './Handle'
 import { TimeRangeContainer } from './StyledComponents'
-import { Interval, UpdateCallbackData } from '../types'
+import { DisabledInterval, UpdateCallbackData } from '../types'
 
 interface TimeRangeProps {
   /** Number of steps on the timeline (the default value is 30 minutes) */
@@ -27,7 +27,7 @@ interface TimeRangeProps {
   /** Interval to display */
   timelineInterval?: [Date, Date]
   /** Array of disabled intervals inside the timeline */
-  disabledIntervals?: Interval[]
+  disabledIntervals?: DisabledInterval[]
   /** ClassName of the wrapping container */
   containerClassName?: string
   sliderRailClassName?: string
@@ -74,7 +74,7 @@ const getTimelineConfig = (timelineStart: Date, timelineLength: number) => (date
   return { id, percent, value }
 }
 
-const getFormattedBlockedIntervals = (blockedDates: Interval[] = [], [startTime, endTime]: Date[]) => {
+const getFormattedBlockedIntervals = (blockedDates: DisabledInterval[] = [], [startTime, endTime]: Date[]) => {
   if (!blockedDates.length) return null
 
   const timelineLength = differenceInMilliseconds(endTime, startTime)
@@ -82,6 +82,7 @@ const getFormattedBlockedIntervals = (blockedDates: Interval[] = [], [startTime,
 
   const formattedBlockedDates = blockedDates.map((interval, index) => {
     let { start, end } = interval
+    const { color } = interval
 
     if (isBefore(start, startTime)) start = startTime
     if (isAfter(end, endTime)) end = endTime
@@ -89,7 +90,7 @@ const getFormattedBlockedIntervals = (blockedDates: Interval[] = [], [startTime,
     const source = getConfig(start, 'blocked-start')
     const target = getConfig(end, 'blocked-end')
 
-    return { id: `blocked-track-${index}`, source, target }
+    return { id: `blocked-track-${index}`, source, target, color }
   })
 
   return formattedBlockedDates
@@ -242,7 +243,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
             <Tracks left={false} right={false}>
               {({ getTrackProps }) => (
                 <>
-                  {disabledIntervals.map(({ id, source, target }) => (
+                  {disabledIntervals.map(({ id, source, target, color }) => (
                     <Track
                       error={error ?? false}
                       key={id}
@@ -250,6 +251,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
                       target={target}
                       getTrackProps={getTrackProps}
                       disabled={true}
+                      color={color} // Pass the color property here
                     />
                   ))}
                 </>

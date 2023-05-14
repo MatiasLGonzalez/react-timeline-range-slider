@@ -21,11 +21,26 @@ export const StyledTrack = styled.div<StyledTrackProps>`
   left: ${({ sourcePercent }) => `${sourcePercent}%`};
   width: ${({ sourcePercent, targetPercent }) => `calc(${targetPercent - sourcePercent}%)`};
 
-  ${({ disabled, error }) =>
-    disabled
-      ? `
+  ${({ disabled, error, color }) =>
+    !color
+      ? disabled
+        ? `
     border: 1px solid #C8CACC;
     background: repeating-linear-gradient( -45deg, transparent, transparent 3px, #D0D3D7 4px, #D0D3D7 2px);
+	  `
+        : error
+        ? `
+    background-color: rgba(214,0,11,0.5);
+    border: 1px solid rgba(214,0,11,0.5);
+  `
+        : `
+    background-color: rgba(98, 203, 102, 0.5);
+    border: 1px solid #62CB66;
+  `
+      : disabled
+      ? `
+    border: 1px solid #C8CACC;
+    background: repeating-linear-gradient( -45deg, ${color}, ${color} 3px, #D0D3D7 4px, #D0D3D7 2px);
 	  `
       : error
       ? `

@@ -3,12 +3,14 @@ export type StyledTrackProps = {
   disabled: boolean
   sourcePercent: number
   targetPercent: number
+  color: string
 }
 
-export type Interval = {
+export type DisabledInterval = {
   id: string
   start: Date
   end: Date
+  color?: string
 }
 
 export type UpdateCallbackData = {
