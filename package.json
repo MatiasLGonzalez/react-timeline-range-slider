@@ -1,6 +1,6 @@
 {
-  "name": "@matiaslgonzalez/react-timeline-range-slider",
-  "version": "1.6",
+  "name": "@floppychips/react-timeline-range-slider",
+  "version": "1.6.0",
   "description": "Time Slider component for React",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -17,12 +17,13 @@
   },
   "author": "Elizaveta Shkodkina <lizashkodkina@gmail.com>",
   "contributors": [
-    "Matías González <hello@matiaslgonzalez.com>"
+    "Matías González <hello@matiaslgonzalez.com>",
+    "https://github.com/floppychips"
   ],
-  "homepage": "https://www.npmjs.com/package/@matiaslgonzalez/react-timeline-range-slider",
+  "homepage": "https://www.npmjs.com/package/@floppychips/react-timeline-range-slider",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MatiasLGonzalez/react-timeline-range-slider"
+    "url": "https://github.com/floppychips/react-timeline-range-slider"
   },
   "keywords": [
     "react-component",
@@ -35,7 +36,7 @@
     "range"
   ],
   "license": "MIT",
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "yarn@4.3.1",
   "devDependencies": {
     "@testing-library/react": "^14.0.0",
     "@types/d3-scale": "^4.0.3",

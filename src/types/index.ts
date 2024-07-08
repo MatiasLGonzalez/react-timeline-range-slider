@@ -4,6 +4,13 @@ export type StyledTrackProps = {
   sourcePercent: number
   targetPercent: number
   color: string
+  disabledColor: string
+  successColor: string
+  height?: string
+}
+
+export type StyledRailProps = {
+  height?: string
 }
 
 export type DisabledInterval = {
