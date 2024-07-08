@@ -1,6 +1,6 @@
 {
   "name": "@floppychips/react-timeline-range-slider",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Time Slider component for React",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
