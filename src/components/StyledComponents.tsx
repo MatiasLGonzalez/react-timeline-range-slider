@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
-import type { StyledTrackProps } from '../types'
+import type { StyledRailProps, StyledTrackProps } from '../types'
 
 export const TimeRangeContainer = styled.div`
   position: relative;
   padding: 5%;
-  height: 15em;
   width: 100%;
   box-sizing: border-box;
   margin-top: 1em;
@@ -13,7 +12,7 @@ export const TimeRangeContainer = styled.div`
 export const StyledTrack = styled.div<StyledTrackProps>`
   position: absolute;
   transform: translate(0%, -50%);
-  height: 5em;
+  height: ${({ height }) => height ?? '3em'};
   cursor: pointer;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease;
   z-index: ${({ disabled }) => (disabled ? 1 : 3)};
@@ -21,8 +20,8 @@ export const StyledTrack = styled.div<StyledTrackProps>`
   left: ${({ sourcePercent }) => `${sourcePercent}%`};
   width: ${({ sourcePercent, targetPercent }) => `calc(${targetPercent - sourcePercent}%)`};
 
-  ${({ disabled, error, color }) =>
-    !color
+  ${({ disabled, error, disabledColor, successColor }) =>
+    !disabledColor
       ? disabled
         ? `
     border: 1px solid #C8CACC;
@@ -34,13 +33,13 @@ export const StyledTrack = styled.div<StyledTrackProps>`
     border: 1px solid rgba(214,0,11,0.5);
   `
         : `
-    background-color: rgba(98, 203, 102, 0.5);
+    background-color: ${successColor}
     border: 1px solid #62CB66;
   `
       : disabled
       ? `
     border: 1px solid #C8CACC;
-    background: repeating-linear-gradient( -45deg, ${color}, ${color} 3px, #D0D3D7 4px, #D0D3D7 2px);
+    background: repeating-linear-gradient( -45deg, ${disabledColor}, ${disabledColor} 3px, #D0D3D7 4px, #D0D3D7 2px);
 	  `
       : error
       ? `
@@ -48,25 +47,25 @@ export const StyledTrack = styled.div<StyledTrackProps>`
     border: 1px solid rgba(214,0,11,0.5);
   `
       : `
-    background-color: rgba(98, 203, 102, 0.5);
+    background-color: ${successColor}
     border: 1px solid #62CB66;
   `}
 `
 
 /** Slider used for input */
-export const StyledOuterRailDiv = styled.div`
+export const StyledOuterRailDiv = styled.div<StyledRailProps>`
   position: absolute;
   width: 100%;
-  height: 5em;
+  height: ${({ height }) => height ?? '3em'};
   transform: translate(0%, -50%);
   cursor: pointer;
 `
 
 /** Slider used for drawing */
-export const StyledInnerRailDiv = styled.div`
+export const StyledInnerRailDiv = styled.div<StyledRailProps>`
   position: absolute;
   width: 100%;
-  height: 5em;
+  height: ${({ height }) => height ?? '3em'};
   border-radius: 2.5px;
   transform: translate(0%, -50%);
   pointer-events: none;
@@ -74,35 +73,35 @@ export const StyledInnerRailDiv = styled.div`
   border-bottom: 1px solid #c8cacc;
 `
 
-export const StyledHandleWrapper = styled.div`
+export const StyledHandleWrapper = styled.div<{ height?: string }>`
   position: absolute;
   transform: translate(-50%, -50%);
   -webkit-tap-highlight-color: #000000;
   z-index: 6;
   width: 24px;
-  height: 24px;
+  height: ${({ height }) => height ?? '24px'};
   cursor: pointer;
   background-color: transparent;
 `
 
-export const StyledHandleContainer = styled.div<{ disabled: boolean }>`
+export const StyledHandleContainer = styled.div<{ disabled: boolean; height?: string }>`
   position: absolute;
   display: flex;
   transform: translate(-50%, -50%);
   z-index: 4;
   width: 10px;
-  height: 24px;
+  height: ${({ height }) => height ?? '24px'};
   border-radius: 4px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
   background-color: ${({ disabled }) => (disabled ? '#666' : '#FFFFFF')};
 `
 
-export const StyledHandleMarker = styled.div<{ error: boolean }>`
+export const StyledHandleMarker = styled.div<{ error: boolean; disabledColor: string; successColor: string }>`
   width: 2px;
-  height: 12px;
+  height: 50%;
   margin: auto;
   border-radius: 2px;
-  background-color: ${({ error }) => (error ? 'rgb(214, 0, 11)' : 'rgb(98, 203, 102)')};
+  background-color: ${({ error, disabledColor, successColor }) => (error ? disabledColor : successColor)};
   transition: background-color 0.2s ease;
 `
 

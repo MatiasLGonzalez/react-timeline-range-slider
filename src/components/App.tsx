@@ -1,15 +1,15 @@
 import React from 'react'
 import { scaleTime } from 'd3-scale'
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'
+import { Slider, Rail, Handles, Tracks, Ticks, CustomMode } from 'react-compound-slider'
 import {
   format,
-  addHours,
   startOfToday,
   endOfToday,
   differenceInMilliseconds,
   isBefore,
   isAfter,
   addMinutes,
+  addHours,
 } from 'date-fns'
 
 import SliderRail from './SliderRail'
@@ -23,14 +23,17 @@ interface TimeRangeProps {
   /** Number of steps on the timeline (the default value is 30 minutes) */
   ticksNumber?: number
   /** Selected interval inside the timeline */
-  selectedInterval?: [Date, Date]
+  selectedInterval?: [Date, Date | undefined]
   /** Interval to display */
   timelineInterval?: [Date, Date]
   /** Array of disabled intervals inside the timeline */
   disabledIntervals?: DisabledInterval[]
   /** ClassName of the wrapping container */
   containerClassName?: string
+  /** ClassName of the slider container */
   sliderRailClassName?: string
+  /** ClassName of the tooltip container */
+  tooltipClassName?: string
   /** Number of milliseconds between steps (the default value is 30 minutes) */
   step?: number
   /** Function that determines the format in which the date will be displayed */
@@ -43,13 +46,24 @@ interface TimeRangeProps {
    * ADVANCED: You can also supply a function that will be passed the current
    * values and the incoming update. Your function should return what the state
    * should be set as. */
-  mode?: number
-  onChangeCallback: (formattedNewTime: [Date, Date]) => void
+  mode?: 2 | 1 | 3 | CustomMode | undefined
+  /** Callback functions for events */
+  onChangeCallback: (formattedNewTime: [Date, Date | undefined]) => void
   onUpdateCallback: (data: UpdateCallbackData) => void
+  onSlideStartCallback: (formattedNewTime: [Date, Date | undefined]) => void
+  onSlideEndCallback: (formattedNewTime: [Date, Date | undefined]) => void
   /**
    * Set this variable to true if you want to show a line on the timeline that represents the current time.
    */
   showNow: boolean
+  /** Set this to true if you want to enable tooltips for the current time */
+  showTooltips: boolean
+  /** Colour options */
+  successColor: string
+  disabledColor: string
+  /** Height options */
+  height?: string
+  handleHeight?: string
 }
 
 const defaultProps: TimeRangeProps = {
@@ -57,14 +71,23 @@ const defaultProps: TimeRangeProps = {
   selectedInterval: [new Date(), addHours(new Date(), 1)],
   disabledIntervals: [],
   containerClassName: '',
+  sliderRailClassName: '',
+  tooltipClassName: '',
   step: 1000 * 60 * 30, // 30 minutes in milliseconds
   ticksNumber: 48, // 30 minutes * 48 = 24 hours
   error: false,
   mode: 3,
   formatTick: (ms: number) => format(new Date(ms), 'HH:mm'),
   showNow: true,
+  showTooltips: true,
   onChangeCallback: () => 'Change callback not set',
   onUpdateCallback: () => 'Update callback not set',
+  onSlideStartCallback: () => 'Slide start callback not set',
+  onSlideEndCallback: () => 'Slide end callback not set',
+  successColor: 'rgb(98, 203, 102)',
+  disabledColor: 'rgb(214, 0, 11)',
+  height: '3em',
+  handleHeight: '24px',
 }
 
 const getTimelineConfig = (timelineStart: Date, timelineLength: number) => (date: Date, idPrefix: string) => {
@@ -110,12 +133,19 @@ class TimeRange extends React.Component<TimeRangeProps> {
     selectedInterval: [new Date(), addHours(new Date(), 1)],
     disabledIntervals: [],
     containerClassName: '',
+    sliderRailClassName: '',
+    tooltipClassName: '',
     step: 1000 * 60 * 30, // 30 minutes in milliseconds
     ticksNumber: 48, // 30 minutes * 48 = 24 hours
     error: false,
     mode: 3,
     formatTick: (ms: number) => format(new Date(ms), 'HH:mm'),
     showNow: true,
+    showTooltips: true,
+    successColor: 'rgb(98, 203, 102)',
+    disabledColor: 'rgb(214, 0, 11)',
+    height: '3em',
+    handleHeight: '24px',
   }
   get disabledIntervals() {
     return getFormattedBlockedIntervals(
@@ -129,27 +159,31 @@ class TimeRange extends React.Component<TimeRangeProps> {
   }
 
   onChange = (newTime: ReadonlyArray<number>) => {
-    const formattedNewTime = newTime.map((t) => new Date(t))
+    const formattedNewTime = newTime.map((t) => (t ? new Date(t) : undefined))
     if (this.props.onChangeCallback) {
-      this.props.onChangeCallback([formattedNewTime[0], formattedNewTime[1]])
+      this.props.onChangeCallback([formattedNewTime[0] as Date, formattedNewTime[1]])
     }
   }
 
   checkIsSelectedIntervalNotValid = (
-    [start, end]: [number, number],
+    [start, end]: [number, number | undefined],
     source: { value: number },
     target: { value: number },
   ) => {
     const { value: startInterval } = source
     const { value: endInterval } = target
 
-    if ((startInterval > start && endInterval <= end) || (startInterval >= start && endInterval < end)) return true
-    if (start >= startInterval && end <= endInterval) return true
+    if (end) {
+      if ((startInterval > start && endInterval <= end) || (startInterval >= start && endInterval < end)) return true
+      if (start >= startInterval && end <= endInterval) return true
 
-    const isStartInBlockedInterval = start > startInterval && start < endInterval && end >= endInterval
-    const isEndInBlockedInterval = end < endInterval && end > startInterval && start <= startInterval
+      const isStartInBlockedInterval = start > startInterval && start < endInterval && end >= endInterval
+      const isEndInBlockedInterval = end < endInterval && end > startInterval && start <= startInterval
 
-    return isStartInBlockedInterval || isEndInBlockedInterval
+      return isStartInBlockedInterval || isEndInBlockedInterval
+    } else {
+      return start > startInterval && start < endInterval
+    }
   }
 
   onUpdate = (newTime: ReadonlyArray<number>) => {
@@ -161,7 +195,7 @@ class TimeRange extends React.Component<TimeRangeProps> {
 
     if (disabledIntervals?.length) {
       const isValuesNotValid = disabledIntervals.some(({ source, target }) =>
-        this.checkIsSelectedIntervalNotValid([newTime[0], newTime[1]], source, target),
+        this.checkIsSelectedIntervalNotValid([newTime[0], newTime[1] ?? undefined], source, target),
       )
       const formattedNewTime = newTime.map((t) => new Date(t))
       onUpdateCallback({ error: isValuesNotValid, time: formattedNewTime })
@@ -180,32 +214,77 @@ class TimeRange extends React.Component<TimeRangeProps> {
       .map((t) => +t)
   }
 
+  onSlideStart = (newTime: ReadonlyArray<number>) => {
+    const formattedNewTime = newTime.map((t) => (t ? new Date(t) : undefined))
+    if (this.props.onSlideStartCallback) {
+      this.props.onSlideStartCallback([formattedNewTime[0] as Date, formattedNewTime[1]])
+    }
+  }
+  onSlideEnd = (newTime: ReadonlyArray<number>) => {
+    const formattedNewTime = newTime.map((t) => (t ? new Date(t) : undefined))
+    if (this.props.onSlideEndCallback) {
+      this.props.onSlideEndCallback([formattedNewTime[0] as Date, formattedNewTime[1]])
+    }
+  }
+
   render() {
     const {
       timelineInterval = defaultProps.timelineInterval,
       selectedInterval = defaultProps.selectedInterval,
       containerClassName = defaultProps.containerClassName,
+      sliderRailClassName = defaultProps.sliderRailClassName,
+      tooltipClassName = defaultProps.tooltipClassName,
       error = defaultProps.error,
       step = defaultProps.step,
       showNow = defaultProps.showNow,
+      showTooltips = defaultProps.showTooltips,
       formatTick = defaultProps.formatTick,
+      disabledColor = defaultProps.disabledColor,
+      successColor = defaultProps.successColor,
+      mode = defaultProps.mode,
+      height = defaultProps.height,
+      handleHeight = defaultProps.handleHeight,
     } = this.props
 
     const domain = (timelineInterval ?? [startOfToday(), endOfToday()]).map((t) => Number(t))
 
     const disabledIntervals = this.disabledIntervals
 
+    const values = (
+      selectedInterval
+        ? selectedInterval.length > 1 && selectedInterval[1]
+          ? selectedInterval
+          : [selectedInterval[0]]
+        : [new Date(), addHours(new Date(), 1)]
+    ).map((t) => +t!)
+
     return (
       <TimeRangeContainer className={containerClassName}>
         <Slider
+          mode={mode}
           step={step}
           domain={domain.map((t) => +t)}
           onUpdate={this.onUpdate}
           onChange={this.onChange}
-          values={(selectedInterval ?? [new Date(), addHours(new Date(), 1)]).map((t) => +t)}
+          onSlideStart={this.onSlideStart}
+          onSlideEnd={this.onSlideEnd}
+          values={values}
           rootStyle={{ position: 'relative', width: '100%' }}
         >
-          <Rail>{({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}</Rail>
+          <Rail>
+            {({ getEventData, activeHandleID, getRailProps }) => (
+              <SliderRail
+                sliderRailClassName={sliderRailClassName}
+                getEventData={getEventData}
+                activeHandleID={activeHandleID}
+                getRailProps={getRailProps}
+                height={height}
+                showTooltips={showTooltips}
+                tooltipClassName={tooltipClassName}
+                format={formatTick ?? ((ms: number) => format(new Date(ms), 'HH:mm'))}
+              />
+            )}
+          </Rail>
 
           <Handles>
             {({ handles, getHandleProps }) => (
@@ -217,6 +296,9 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     handle={handle}
                     domain={domain}
                     getHandleProps={getHandleProps}
+                    disabledColor={disabledColor}
+                    successColor={successColor}
+                    height={handleHeight}
                   />
                 ))}
               </>
@@ -233,6 +315,8 @@ class TimeRange extends React.Component<TimeRangeProps> {
                     source={source}
                     target={target}
                     getTrackProps={getTrackProps}
+                    successColor={successColor}
+                    height={height}
                   />
                 ))}
               </>
@@ -251,7 +335,8 @@ class TimeRange extends React.Component<TimeRangeProps> {
                       target={target}
                       getTrackProps={getTrackProps}
                       disabled={true}
-                      color={color} // Pass the color property here
+                      disabledColor={color} // Pass the color property here
+                      height={height}
                     />
                   ))}
                 </>
@@ -268,6 +353,8 @@ class TimeRange extends React.Component<TimeRangeProps> {
                   source={this.now?.source}
                   target={this.now?.target}
                   getTrackProps={getTrackProps}
+                  successColor={successColor}
+                  height={height}
                 />
               )}
             </Tracks>

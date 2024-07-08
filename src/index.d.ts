@@ -1,4 +1,4 @@
-declare module '@matiaslgonzalez/react-timeline-range-slider' {
+declare module '@floppychips/react-timeline-range-slider' {
   import * as React from 'react'
 
   export interface Interval {
@@ -19,13 +19,21 @@ declare module '@matiaslgonzalez/react-timeline-range-slider' {
     disabledIntervals?: Interval[]
     containerClassName?: string
     sliderRailClassName?: string
+    tooltipClassName?: string
     step?: number
     formatTick?: (ms: number) => string
     error?: boolean
     mode?: number
     onChangeCallback: (formattedNewTime: [Date, Date]) => void
     onUpdateCallback: (data: UpdateCallbackData) => void
+    onSlideStartCallback: (formattedNewTime: [Date, Date]) => void
+    onSlideEndCallback: (formattedNewTime: [Date, Date]) => void
     showNow: boolean
+    showTooltips: boolean
+    successColor: string
+    disabledColor: string
+    height: string
+    handleHeight: string
   }
 
   export class TimeRange extends React.Component<TimeRangeProps> {}

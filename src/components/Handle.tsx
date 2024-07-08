@@ -12,6 +12,9 @@ interface HandleProps {
   }
   getHandleProps: (id: string) => any
   disabled?: boolean
+  disabledColor: string
+  successColor: string
+  height?: string
 }
 
 const Handle: React.FC<HandleProps> = ({
@@ -20,12 +23,15 @@ const Handle: React.FC<HandleProps> = ({
   handle: { id, value, percent = 0 },
   disabled,
   getHandleProps,
+  disabledColor,
+  successColor,
+  height,
 }) => {
   const leftPosition = `${percent}%`
 
   return (
     <>
-      <StyledHandleWrapper style={{ left: leftPosition }} {...getHandleProps(id)} />
+      <StyledHandleWrapper style={{ left: leftPosition }} {...getHandleProps(id)} height={height} />
       <StyledHandleContainer
         role='slider'
         aria-valuemin={min}
@@ -33,8 +39,9 @@ const Handle: React.FC<HandleProps> = ({
         aria-valuenow={value}
         style={{ left: leftPosition }}
         disabled={disabled ?? false}
+        height={height}
       >
-        <StyledHandleMarker error={error} />
+        <StyledHandleMarker error={error} disabledColor={disabledColor} successColor={successColor} />
       </StyledHandleContainer>
     </>
   )
